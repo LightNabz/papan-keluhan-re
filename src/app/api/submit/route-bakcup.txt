@@ -1,0 +1,59 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
+import formidable, { Fields, Files } from 'formidable';
+import fs from 'fs';
+
+export const config = { api: { bodyParser: false } };
+
+export async function POST(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  const form = new formidable.IncomingForm();
+  form.parse(req, async (err: any, fields: Fields, files: Files) => {
+    if (err) return res.status(500).json({ error: 'Form parse error' });
+
+    const { title, content, name = 'Anon', jenis_keluhan, status = 'Menunggu Respon' } = fields;
+    let image_url = null;
+
+    if (files.image) {
+      const imageFile = Array.isArray(files.image) ? files.image[0] : files.image;
+      const filename = `${uuidv4()}_${imageFile.originalFilename}`;
+      const fileData = fs.readFileSync(imageFile.filepath);
+
+      const uploadRes = await axios.put(
+        `${process.env.SUPABASE_URL}/storage/v1/object/${process.env.SUPABASE_BUCKET}/${filename}`,
+        fileData,
+        {
+          headers: {
+            apikey: process.env.SUPABASE_KEY,
+            Authorization: `Bearer ${process.env.SUPABASE_KEY}`,
+            'Content-Type': imageFile.mimetype,
+          },
+        }
+      );
+      if (uploadRes.status === 200) {
+        image_url = `${process.env.SUPABASE_URL}/storage/v1/object/public/${process.env.SUPABASE_BUCKET}/${filename}`;
+      }
+    }
+
+    const payload = { title, content, name, jenis_keluhan, status, image_url };
+    const noteRes = await axios.post(
+      `${process.env.SUPABASE_URL}/rest/v1/notes`,
+      payload,
+      {
+        headers: {
+          apikey: process.env.SUPABASE_KEY,
+          Authorization: `Bearer ${process.env.SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (noteRes.status === 201) {
+      return res.status(201).json({ message: 'Note submitted successfully' });
+    } else {
+      return res.status(500).json({ error: 'Failed to submit note' });
+    }
+  });
+}
