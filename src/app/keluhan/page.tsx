@@ -2,7 +2,6 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import Navbar from "../components/Navbar";
 import Image from "next/image";
-// import BackgroundDecor from "../components/BackgroundDecor";
 
 interface Note {
   id: string;
@@ -181,7 +180,7 @@ export default function KeluhanPage() {
         )}
 
         {/* Notes */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-16">
+        <div className="flex flex-wrap gap-12 items-start justify-center">
           {notes
             .filter((note) => note.jenis_keluhan !== "Perundungan")
             .map((note, idx) => (
@@ -190,13 +189,14 @@ export default function KeluhanPage() {
                 onClick={() =>
                   setActiveNote(activeNote === note.id ? null : note.id)
                 }
-                className={`group relative border rounded-xl p-5 shadow-lg bg-white dark:bg-gray-800 transition-all duration-300 flex flex-col justify-between h-full cursor-pointer
-                  ${activeNote === note.id ? "rotate-0 scale-[1.03] shadow-2xl" : idx % 2 === 0 ? "rotate-[-2deg]" : "rotate-[2deg]"}
+                className={`relative border rounded-xl p-5 shadow-lg bg-white dark:bg-gray-800 transition-all duration-300 flex flex-col justify-between cursor-pointer w-full md:w-[calc(33.333%-3rem)]
+                  ${activeNote === note.id ? "scale-[1.03] shadow-2xl" : idx % 2 === 0 ? "rotate-[-2deg]" : "rotate-[2deg]"}
                   hover:rotate-0 hover:scale-[1.03] hover:shadow-2xl
                   before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-24 before:h-3 before:bg-pink-300 before:rounded-b-lg before:content-['']`}
                 style={{
                   boxShadow: "0 8px 24px 0 rgba(0,0,0,0.08)",
                   border: "1.5px solid",
+                  minWidth: "280px",
                 }}
               >
                 <div>
@@ -215,15 +215,16 @@ export default function KeluhanPage() {
                     {note.content}
                   </p>
                   {note.image_url && (
-                    <Image
-                      src={note.image_url}
-                      alt="Lampiran"
-                      width={600}
-                      height={600}
-                      className={`mb-3 max-h-40 rounded-lg object-cover shadow transition-all duration-500 ease-in-out
-                        group-hover:max-h-[500px]
-                        ${activeNote === note.id ? "max-h-[500px]" : ""}`}
-                    />
+                    <div className="overflow-hidden">
+                      <Image
+                        src={note.image_url}
+                        alt="Lampiran"
+                        width={600}
+                        height={600}
+                        className={`mb-3 max-h-40 rounded-lg object-cover shadow transition-all duration-500 ease-in-out
+                          ${activeNote === note.id ? "max-h-[500px]" : ""}`}
+                      />
+                    </div>
                   )}
                 </div>
                 <p className="text-sm mt-4 font-semibold">

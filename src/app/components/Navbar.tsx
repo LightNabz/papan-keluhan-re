@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const firstLinkRef = useRef<HTMLAnchorElement | null>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (open) {
@@ -24,6 +26,8 @@ export default function Navbar() {
     };
   }, [open]);
 
+  const isActive = (path: string) => pathname === path;
+
   return (
     <nav className="mb-10 flex items-center justify-between px-6 py-4 shadow-md bg-white dark:bg-gray-900 sticky top-0 z-50">
       <div className="logo font-extrabold text-2xl text-blue-600 dark:text-blue-400 select-none">
@@ -35,7 +39,9 @@ export default function Navbar() {
         <li>
           <Link
             href="/"
-            className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className={`hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${
+              isActive("/") ? "text-blue-600 dark:text-blue-400 font-semibold" : ""
+            }`}
           >
             Beranda
           </Link>
@@ -43,7 +49,9 @@ export default function Navbar() {
         <li>
           <Link
             href="/keluhan"
-            className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className={`hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${
+              isActive("/keluhan") ? "text-blue-600 dark:text-blue-400 font-semibold" : ""
+            }`}
           >
             Keluhan
           </Link>
@@ -51,7 +59,9 @@ export default function Navbar() {
         <li>
           <Link
             href="/admin/login"
-            className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className={`hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${
+              isActive("/admin/login") ? "text-blue-600 dark:text-blue-400 font-semibold" : ""
+            }`}
           >
             Admin
           </Link>
@@ -74,67 +84,79 @@ export default function Navbar() {
       </button>
 
       {/* Mobile drawer + overlay */}
-      {open && (
-        <div className="md:hidden fixed inset-0 z-[60]" role="dialog" aria-modal="true">
-          {/* Overlay */}
-          <div
-            className="absolute inset-0 bg-black/50"
-            onClick={() => setOpen(false)}
-          />
+      <div className={`md:hidden fixed inset-0 z-[60] transition-opacity duration-300 ${
+        open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+      }`} role="dialog" aria-modal="true" aria-hidden={!open}>
+        {/* Overlay */}
+        <div
+          className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ${
+            open ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={() => setOpen(false)}
+        />
 
-          {/* Drawer panel */}
-            <aside
-              id="mobile-drawer"
-              className="absolute right-0 top-0 h-full w-72 max-w-[85%] 
-                        bg-white dark:bg-gray-900 
-                        shadow-2xl border-l border-black/10 dark:border-white/10"
+        {/* Drawer panel */}
+        <aside
+          id="mobile-drawer"
+          className={`absolute right-0 top-0 h-full w-72 max-w-[85%] 
+                    bg-white dark:bg-gray-900 
+                    shadow-2xl border-l border-black/10 dark:border-white/10
+                    transform transition-transform duration-300 ease-in-out ${
+                      open ? "translate-x-0" : "translate-x-full"
+                    }`}
+        >
+          <div className="flex items-center justify-between p-4 border-b border-black/10 dark:border-white/10 bg-white dark:bg-gray-900">              
+            <span className="font-semibold text-lg">Menu</span>
+            <button
+              aria-label="Close menu"
+              onClick={() => setOpen(false)}
+              className="rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-            <div className="flex items-center justify-between p-4 border-b border-black/10 dark:border-white/10 bg-white dark:bg-gray-900">              
-              <span className="font-semibold text-lg">Menu</span>
-              <button
-                aria-label="Close menu"
-                onClick={() => setOpen(false)}
-                className="rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {/* X icon */}
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
-                  <path d="M6.225 4.811a1 1 0 0 1 1.414 0L12 9.172l4.361-4.361a1 1 0 1 1 1.414 1.414L13.414 10.586l4.361 4.361a1 1 0 0 1-1.414 1.414L12 12l-4.361 4.361a1 1 0 0 1-1.414-1.414l4.361-4.361-4.361-4.361a1 1 0 0 1 0-1.414Z" />
-                </svg>
-              </button>
-            </div>
+              {/* X icon */}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+                <path d="M6.225 4.811a1 1 0 0 1 1.414 0L12 9.172l4.361-4.361a1 1 0 1 1 1.414 1.414L13.414 10.586l4.361 4.361a1 1 0 0 1-1.414 1.414L12 12l-4.361 4.361a1 1 0 0 1-1.414-1.414l4.361-4.361-4.361-4.361a1 1 0 0 1 0-1.414Z" />
+              </svg>
+            </button>
+          </div>
 
-            <ul className="p-4 space-y-2">
-              <li>
-                <Link
-                  href="/"
-                  ref={firstLinkRef}
-                  onClick={() => setOpen(true)}
-                  className="block rounded-xl px-4 py-3 font-medium hover:bg-black/5 dark:hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  Beranda
-                </Link>
-                <Link
-                  href="/keluhan"
-                  ref={firstLinkRef}
-                  onClick={() => setOpen(true)}
-                  className="block rounded-xl px-4 py-3 font-medium hover:bg-black/5 dark:hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  Keluhan
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/admin/login"
-                  onClick={() => setOpen(true)}
-                  className="block rounded-xl px-4 py-3 font-medium hover:bg-black/5 dark:hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  Admin
-                </Link>
-              </li>
-            </ul>
-          </aside>
-        </div>
-      )}
+          <ul className="p-4 space-y-2">
+            <li>
+              <Link
+                href="/"
+                ref={firstLinkRef}
+                onClick={() => setOpen(false)}
+                className={`block rounded-xl px-4 py-3 font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  isActive("/") ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400" : ""
+                }`}
+              >
+                Beranda
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/keluhan"
+                onClick={() => setOpen(false)}
+                className={`block rounded-xl px-4 py-3 font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  isActive("/keluhan") ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400" : ""
+                }`}
+              >
+                Keluhan
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/admin/login"
+                onClick={() => setOpen(false)}
+                className={`block rounded-xl px-4 py-3 font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  isActive("/admin/login") ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400" : ""
+                }`}
+              >
+                Admin
+              </Link>
+            </li>
+          </ul>
+        </aside>
+      </div>
     </nav>
   );
 }
