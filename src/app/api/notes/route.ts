@@ -1,8 +1,7 @@
-import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import axios from 'axios';
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const response = await axios.get(
       `${process.env.SUPABASE_URL}/rest/v1/notes?select=*&order=created_at.desc`,
@@ -15,7 +14,7 @@ export async function GET(req: NextRequest) {
       }
     );
     return NextResponse.json(response.data);
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch notes' }, { status: 500 });
   }
 }

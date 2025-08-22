@@ -31,7 +31,7 @@ export async function PATCH(
     );
 
     return NextResponse.json({ message: "Status updated successfully" });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: "Failed to update status" }, { status: 500 });
   }
 }

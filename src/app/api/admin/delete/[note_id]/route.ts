@@ -2,14 +2,14 @@ import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import axios from 'axios';
 
-export async function DELETE(req: NextRequest, { params }: { params: { note_id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ note_id: string }> }) {
   // For cookie parsing, use req.cookies in App Router
   const cookies = req.cookies;
   if (!cookies.get('admin_logged_in')) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { note_id } = params;
+  const { note_id } = await params;
 
   const db_headers = {
     apikey: process.env.SUPABASE_KEY!,
@@ -46,7 +46,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { note_id: 
       { headers: db_headers }
     );
     return NextResponse.json({ message: 'Note deleted successfully' });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: 'Failed to delete note' }, { status: 500 });
   }
 }

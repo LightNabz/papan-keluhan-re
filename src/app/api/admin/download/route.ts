@@ -2,6 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 import ExcelJS from 'exceljs';
 
+interface Note {
+  id: string;
+  created_at: string;
+  jenis_keluhan: string;
+  title: string;
+  content: string;
+  name: string;
+  image_url: string | null;
+  status: string;
+}
+
 export async function GET(req: NextRequest) {
   const cookies = req.cookies;
   if (!cookies.get('admin_logged_in')) {
@@ -35,7 +46,7 @@ export async function GET(req: NextRequest) {
       { header: 'Status', key: 'status', width: 25 },
     ];
 
-    notes.forEach((note: any, idx: number) => {
+    notes.forEach((note: Note) => {
       worksheet.addRow({
         id: note.id.slice(-8),
         created_at: new Date(note.created_at).toLocaleDateString('id-ID'),
@@ -56,7 +67,7 @@ export async function GET(req: NextRequest) {
         'Content-Disposition': `attachment; filename=laporan_keluhan.xlsx`,
       },
     });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: 'Failed to generate Excel' }, { status: 500 });
   }
 }

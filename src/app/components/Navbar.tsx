@@ -7,7 +7,6 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const firstLinkRef = useRef<HTMLAnchorElement | null>(null);
 
-  // Lock body scroll when drawer open & handle ESC to close
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
@@ -33,6 +32,14 @@ export default function Navbar() {
 
       {/* Desktop links */}
       <ul className="hidden md:flex gap-6 font-medium">
+        <li>
+          <Link
+            href="/"
+            className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >
+            Beranda
+          </Link>
+        </li>
         <li>
           <Link
             href="/keluhan"

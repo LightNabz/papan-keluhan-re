@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import Navbar from "../components/Navbar";
+import Image from "next/image";
+import BackgroundDecor from "../components/BackgroundDecor";
 
 interface Note {
   id: string;
@@ -22,9 +24,10 @@ export default function KeluhanPage() {
     jenis_keluhan: "Perundungan",
     image: null as File | null,
   });
-  const [status, setStatus] = useState("Menunggu Respon");
+  const [status] = useState("Menunggu Respon");
   const [loading, setLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [activeNote, setActiveNote] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/notes")
@@ -32,7 +35,9 @@ export default function KeluhanPage() {
       .then(setNotes);
   }, []);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
@@ -81,7 +86,6 @@ export default function KeluhanPage() {
     <div className="font-sans min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-950 text-gray-800 dark:text-gray-100">
       {/* Navbar */}
       <Navbar />
-
       <div className="container mx-auto px-6">
         {/* Button Tambah */}
         <div className="flex justify-center mb-8">
@@ -92,6 +96,7 @@ export default function KeluhanPage() {
             ➕ Tambah Keluhan
           </button>
         </div>
+
         {/* Modal */}
         {modalOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
@@ -156,10 +161,12 @@ export default function KeluhanPage() {
                 className="w-full mb-3"
               />
               {imagePreview && (
-                <img
+                <Image
                   src={imagePreview}
                   alt="Preview"
                   className="mb-3 max-h-40 rounded-lg shadow-md"
+                  width={600}
+                  height={600}
                 />
               )}
               <button
@@ -180,9 +187,13 @@ export default function KeluhanPage() {
             .map((note, idx) => (
               <div
                 key={note.id}
-                className={`relative border rounded-xl p-5 shadow-lg bg-white dark:bg-gray-800 transition-shadow flex flex-col justify-between h-full
-        ${idx % 2 === 0 ? "rotate-[-2deg]" : "rotate-[2deg]"}
-        before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-24 before:h-3 before:bg-pink-300 before:rounded-b-lg before:content-['']`}
+                onClick={() =>
+                  setActiveNote(activeNote === note.id ? null : note.id)
+                }
+                className={`group relative border rounded-xl p-5 shadow-lg bg-white dark:bg-gray-800 transition-all duration-300 flex flex-col justify-between h-full cursor-pointer
+                  ${activeNote === note.id ? "rotate-0 scale-[1.03] shadow-2xl" : idx % 2 === 0 ? "rotate-[-2deg]" : "rotate-[2deg]"}
+                  hover:rotate-0 hover:scale-[1.03] hover:shadow-2xl
+                  before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-24 before:h-3 before:bg-pink-300 before:rounded-b-lg before:content-['']`}
                 style={{
                   boxShadow: "0 8px 24px 0 rgba(0,0,0,0.08)",
                   border: "1.5px solid",
@@ -200,12 +211,18 @@ export default function KeluhanPage() {
                   <h3 className="text-lg font-bold mb-2 text-gray-700 dark:text-gray-300">
                     {note.title}
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-500 mb-3">{note.content}</p>
+                  <p className="text-gray-600 dark:text-gray-500 mb-3">
+                    {note.content}
+                  </p>
                   {note.image_url && (
-                    <img
+                    <Image
                       src={note.image_url}
                       alt="Lampiran"
-                      className="mb-3 max-h-40 rounded-lg object-cover shadow"
+                      width={600}
+                      height={600}
+                      className={`mb-3 max-h-40 rounded-lg object-cover shadow transition-all duration-500 ease-in-out
+                        group-hover:max-h-[500px]
+                        ${activeNote === note.id ? "max-h-[500px]" : ""}`}
                     />
                   )}
                 </div>

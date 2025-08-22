@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import cookie from 'cookie';
 
 export async function POST(req: NextRequest) {
   const body = await req.json();

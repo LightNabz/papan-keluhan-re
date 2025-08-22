@@ -1,6 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
+interface Note {
+  id: string;
+  title: string;
+  content: string;
+  name: string;
+  jenis_keluhan: string;
+  status: string;
+  image_url?: string;
+  created_at: string;
+}
+
 export async function GET(req: NextRequest) {
   const cookies = req.cookies;
   if (!cookies.get('admin_logged_in')) {
@@ -26,7 +37,7 @@ export async function GET(req: NextRequest) {
       'Telah ditindaklanjuti': 0,
       Ditolak: 0,
     };
-    notes.forEach((note: any) => {
+    notes.forEach((note: Note) => {
       if (jenis_keluhan_counts[note.jenis_keluhan] !== undefined)
         jenis_keluhan_counts[note.jenis_keluhan]++;
       if (status_counts[note.status] !== undefined)
@@ -38,7 +49,7 @@ export async function GET(req: NextRequest) {
       jenis_keluhan_counts,
       status_counts,
     });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch dashboard data' }, { status: 500 });
   }
 }

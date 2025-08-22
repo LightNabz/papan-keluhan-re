@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Download, LogOut, BarChart3, List } from "lucide-react";
+import Image from "next/image"
 import {
   PieChart, Pie, Cell, Tooltip, Legend,
   BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer
@@ -17,11 +18,17 @@ interface Note {
   image_url?: string;
 }
 
+interface Stats {
+  total_notes: number;
+  jenis_keluhan_counts: Record<string, number>;
+  status_counts: Record<string, number>;
+}
+
 const COLORS = ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6"];
 
 export default function AdminDashboard() {
   const [notes, setNotes] = useState<Note[]>([]);
-  const [stats, setStats] = useState<any>(null);
+  const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -192,9 +199,11 @@ export default function AdminDashboard() {
                 <h3 className="text-lg font-bold">{note.title}</h3>
                 <p className="mb-3 text-gray-700 dark:text-gray-300">{note.content}</p>
                 {note.image_url && (
-                <img
+                <Image
                     src={note.image_url}
                     alt="lampiran"
+                    width={500}
+                    height={500}
                     className="max-h-40 rounded-md mb-3 w-full object-cover"
                 />
                 )}
