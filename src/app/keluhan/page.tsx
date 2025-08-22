@@ -2,7 +2,7 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import Navbar from "../components/Navbar";
 import Image from "next/image";
-import BackgroundDecor from "../components/BackgroundDecor";
+// import BackgroundDecor from "../components/BackgroundDecor";
 
 interface Note {
   id: string;
