@@ -25,6 +25,7 @@ interface Stats {
 export default function AdminDashboard() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
+  const [onlineAdmins, setOnlineAdmins] = useState(0);
   const [loading, setLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentView, setCurrentView] = useState<"landing" | "complaints" | "minigame">("landing");
@@ -70,6 +71,26 @@ export default function AdminDashboard() {
     };
   }, [mobileMenuOpen]);
 
+  // Fetch online admin count periodically
+  useEffect(() => {
+    const fetchOnlineAdmins = async () => {
+      try {
+        const response = await fetch('/api/admin/online');
+        if (response.ok) {
+          const data = await response.json();
+          setOnlineAdmins(data.online_count);
+        }
+      } catch (error) {
+        console.error('Failed to fetch online admins:', error);
+      }
+    };
+
+    fetchOnlineAdmins();
+    const interval = setInterval(fetchOnlineAdmins, 30000); // Update every 30 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   const handleDelete = async (id: string) => {
     if (!confirm("Yakin ingin menghapus keluhan ini?")) return;
     await fetch(`/api/admin/delete/${id}`, { method: "DELETE" });
@@ -103,7 +124,7 @@ export default function AdminDashboard() {
   const renderContent = () => {
     switch (currentView) {
       case "landing":
-        return <LandingPage stats={stats} />;
+        return <LandingPage stats={stats} onlineAdmins={onlineAdmins} />;
       case "complaints":
         return (
           <ComplaintsList

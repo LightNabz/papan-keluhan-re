@@ -12,9 +12,10 @@ interface Stats {
 
 interface LandingPageProps {
   stats: Stats | null;
+  onlineAdmins?: number;
 }
 
-export default function LandingPage({ stats }: LandingPageProps) {
+export default function LandingPage({ stats, onlineAdmins }: LandingPageProps) {
   // Get current time for greeting
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -56,6 +57,14 @@ export default function LandingPage({ stats }: LandingPageProps) {
           </div>
           <h1 className="text-2xl md:text-3xl font-bold mb-4">{getGreeting()}, Admin!</h1>
           {getUrgentMessage()}
+          
+          {/* Online Admin Status */}
+          {onlineAdmins !== undefined && onlineAdmins > 0 && (
+            <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded-lg mb-6">
+              <p className="font-semibold">👥 Admin Online</p>
+              <p>Ada {onlineAdmins} admin yang sedang aktif saat ini.</p>
+            </div>
+          )}
         </div>
       </div>
 
