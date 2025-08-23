@@ -96,88 +96,139 @@ export default function KeluhanPage() {
           </button>
         </div>
 
-        {/* Modal */}
-        {modalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-            <form
-              className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md relative animate-fadeIn"
-              onSubmit={handleSubmit}
+      {/* Modal */}
+      {modalOpen && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
+          <form
+            className="relative border rounded-xl p-8 shadow-2xl bg-white dark:bg-gray-800 transition-all duration-300 w-full max-w-lg"
+            style={{
+              boxShadow: "0 8px 24px 0 rgba(0,0,0,0.1)",
+              border: "1.5px solid",
+              minWidth: "320px",
+            }}
+            onSubmit={handleSubmit}
+          >
+            {/* Close */}
+            <button
+              type="button"
+              className="absolute top-3 right-3 text-2xl text-gray-500 hover:text-red-500"
+              onClick={() => setModalOpen(false)}
             >
-              <button
-                type="button"
-                className="absolute top-2 right-3 text-2xl text-gray-600 hover:text-red-500"
-                onClick={() => setModalOpen(false)}
-              >
-                ×
-              </button>
-              <h2 className="text-2xl font-bold mb-6 text-center text-blue-600 dark:text-blue-400">
-                ✍️ Tulis Keluhan
-              </h2>
-              <input
-                type="text"
-                name="title"
-                placeholder="Judul"
-                value={form.title}
-                onChange={handleChange}
-                className="w-full mb-3 p-3 border rounded-xl focus:ring focus:ring-blue-300 dark:bg-gray-700"
-                required
-                maxLength={40}
-              />
-              <textarea
-                name="content"
-                placeholder="Isi keluhan/saran/laporan"
-                value={form.content}
-                onChange={handleChange}
-                className="w-full mb-3 p-3 border rounded-xl focus:ring focus:ring-blue-300 dark:bg-gray-700"
-                required
-                maxLength={300}
-              />
-              <input
-                type="text"
-                name="name"
-                placeholder="Nama (opsional)"
-                value={form.name}
-                onChange={handleChange}
-                className="w-full mb-3 p-3 border rounded-xl focus:ring focus:ring-blue-300 dark:bg-gray-700"
-                maxLength={15}
-              />
+              ×
+            </button>
+
+            {/* Header */}
+            <div className="mb-3 flex justify-between items-center">
+              <p className="text-sm text-gray-500 dark:text-gray-200">
+                Oleh:{" "}
+                <input
+                  type="text"
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder="Anon"
+                  className="bg-transparent border-b border-gray-400 w-[150px] focus:border-blue-400 focus:outline-none text-sm px-1 dark:bg-gray-800"
+                  maxLength={15}
+                />
+              </p>
               <select
                 name="jenis_keluhan"
                 value={form.jenis_keluhan}
                 onChange={handleChange}
-                className="w-full mb-3 p-3 border rounded-xl dark:bg-gray-700"
+                className="px-3 py-1 text-xs rounded-full bg-blue-600 text-white shadow focus:outline-none"
                 required
               >
                 <option value="Perundungan">Perundungan</option>
                 <option value="Sarana/prasarana">Sarana/prasarana</option>
                 <option value="Saran">Saran</option>
               </select>
-              <input
-                type="file"
-                name="image"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="w-full mb-3"
-              />
-              {imagePreview && (
-                <Image
-                  src={imagePreview}
-                  alt="Preview"
-                  className="mb-3 max-h-40 rounded-lg shadow-md"
-                  width={600}
-                  height={600}
-                />
+            </div>
+
+            {/* Judul */}
+            <input
+              type="text"
+              name="title"
+              placeholder="Judul catatan..."
+              value={form.title}
+              onChange={handleChange}
+              className="text-lg font-bold mb-6 w-full bg-transparent border-b border-gray-400 focus:border-blue-400 focus:outline-none dark:bg-gray-800"
+              required
+              maxLength={40}
+            />
+
+            {/* Isi Note */}
+            <textarea
+              name="content"
+              placeholder="Tulis isi keluhan/saran/laporanmu di sini..."
+              value={form.content}
+              onChange={handleChange}
+              className="w-full text-gray-600 dark:text-gray-300 mb-4 bg-transparent border border-gray-300 dark:border-gray-600 rounded-lg p-3 focus:border-blue-400 focus:outline-none transition-all"
+              required
+              rows={4}
+              maxLength={300}
+            />
+
+
+            {/* Drag & Drop Upload */}
+            <div className="w-full mb-4">
+              {!imagePreview ? (
+                <label
+                  htmlFor="fileUpload"
+                  className="flex flex-col items-center justify-center w-full p-6 border-2 border-dashed border-gray-400 rounded-xl text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-gray-700 transition-all"
+                >
+                  <p className="text-gray-500 dark:text-gray-300">
+                    📂 Drag & Drop atau klik untuk unggah gambar
+                  </p>
+                  <input
+                    id="fileUpload"
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                </label>
+              ) : (
+                <div className="relative group">
+                  <Image
+                    src={imagePreview}
+                    alt="Preview"
+                    width={600}
+                    height={600}
+                    className="max-h-48 w-full object-cover rounded-lg shadow-md"
+                  />
+                  {/* Tombol remove */}
+                  <button
+                    type="button"
+                    onClick={() => setImagePreview(null)}
+                    className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition"
+                  >
+                    ✕
+                  </button>
+                </div>
               )}
-              <button
-                type="submit"
-                className="w-full px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md transition-all"
-                disabled={loading}
-              >
-                {loading ? "Mengirim..." : "Kirim Keluhan"}
-              </button>
-            </form>
-          </div>
-        )}
+            </div>
+
+
+            {/* Disclaimer */}
+            <p className="text-sm mb-4 font-semibold">
+              <strong>⚠️ </strong>{" "}
+              <span className="text-yellow-600 dark:text-yellow-400">
+                Keluhan dengan jenis "Perundungan" tidak akan ditampilkan secara publik.
+              </span>
+            </p>
+
+            {/* Submit */}
+            <button
+              type="submit"
+              className="w-full px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold shadow-md transition-all duration-300 disabled:opacity-60"
+              disabled={loading}
+            >
+              {loading ? "Mengirim..." : "🚀 Simpan Catatan"}
+            </button>
+          </form>
+        </div>
+      )}
 
         {/* Notes */}
         <div className="flex flex-wrap gap-12 items-start justify-center">
