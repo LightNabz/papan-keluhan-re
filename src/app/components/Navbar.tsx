@@ -58,6 +58,14 @@ export default function Navbar() {
         </li>
         <li>
           <Link
+            href="/keluhan/tambah"
+            className="px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors"
+          >
+            ➕ Tambah
+          </Link>
+        </li>
+        <li>
+          <Link
             href="/admin/login"
             className={`hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${
               isActive("/admin/login") ? "text-blue-600 dark:text-blue-400 font-semibold" : ""
