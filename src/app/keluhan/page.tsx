@@ -1,8 +1,8 @@
 "use client";
-import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Image from "next/image";
-import KeluhanModal from "../components/FormModal";
+import Link from "next/link";
 
 interface Note {
   id: string;
@@ -16,17 +16,6 @@ interface Note {
 
 export default function KeluhanPage() {
   const [notes, setNotes] = useState<Note[]>([]);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [form, setForm] = useState({
-    title: "",
-    content: "",
-    name: "",
-    jenis_keluhan: "Perundungan",
-    image: null as File | null,
-  });
-  const [status] = useState("Menunggu Respon");
-  const [loading, setLoading] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [activeNote, setActiveNote] = useState<string | null>(null);
 
   useEffect(() => {
@@ -35,53 +24,6 @@ export default function KeluhanPage() {
       .then(setNotes);
   }, []);
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    setForm((prev) => ({ ...prev, image: file }));
-    setImagePreview(file ? URL.createObjectURL(file) : null);
-  };
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    const formData = new FormData();
-    formData.append("title", form.title);
-    formData.append("content", form.content);
-    formData.append("name", form.name);
-    formData.append("jenis_keluhan", form.jenis_keluhan);
-    formData.append("status", status);
-    if (form.image) formData.append("image", form.image);
-
-    const res = await fetch("/api/submit", {
-      method: "POST",
-      body: formData,
-    });
-
-    if (res.ok) {
-      setModalOpen(false);
-      setForm({
-        title: "",
-        content: "",
-        name: "",
-        jenis_keluhan: "Perundungan",
-        image: null,
-      });
-      setImagePreview(null);
-      fetch("/api/notes")
-        .then((res) => res.json())
-        .then(setNotes);
-    }
-    setLoading(false);
-  };
-
   return (
     <div className="font-sans min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-950 text-gray-800 dark:text-gray-100">
       {/* Navbar */}
@@ -89,27 +31,13 @@ export default function KeluhanPage() {
       <div className="container mx-auto px-6">
         {/* Button Tambah */}
         <div className="flex justify-center mb-8">
-          <button
+          <Link
+            href="/keluhan/tambah"
             className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md transition-transform transform hover:scale-105"
-            onClick={() => setModalOpen(true)}
           >
             ➕ Tambah Keluhan
-          </button>
+          </Link>
         </div>
-
-        {/* Modal (dipisah ke komponen) */}
-        <KeluhanModal
-          open={modalOpen}
-          onClose={() => setModalOpen(false)}
-          form={form}
-          status={status}
-          imagePreview={imagePreview}
-          loading={loading}
-          onChange={handleChange}
-          onImageChange={handleImageChange}
-          onSubmit={handleSubmit}
-          onRemoveImage={() => setImagePreview(null)}
-        />
 
         {/* Notes */}
         <div className="flex flex-wrap gap-12 items-start justify-center">

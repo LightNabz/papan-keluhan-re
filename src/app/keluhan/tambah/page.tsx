@@ -70,24 +70,6 @@ export default function TambahKeluhanPage() {
       <Navbar />
       
       <div className="container mx-auto px-6 py-8">
-        {/* Breadcrumb */}
-        <nav className="mb-8">
-          <ol className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-            <li>
-              <Link href="/" className="hover:text-blue-600 dark:hover:text-blue-400">
-                Beranda
-              </Link>
-            </li>
-            <li className="before:content-['/'] before:mx-2">
-              <Link href="/keluhan" className="hover:text-blue-600 dark:hover:text-blue-400">
-                Keluhan
-              </Link>
-            </li>
-            <li className="before:content-['/'] before:mx-2 font-semibold text-blue-600 dark:text-blue-400">
-              Tambah Keluhan
-            </li>
-          </ol>
-        </nav>
 
         {/* Header */}
         <div className="text-center mb-8">
