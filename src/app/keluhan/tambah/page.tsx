@@ -210,7 +210,7 @@ export default function TambahKeluhanPage() {
                   ⚠️ Perhatian
                 </p>
                 <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
-                  Keluhan dengan jenis "Perundungan" tidak akan ditampilkan secara publik.
+                  {`Keluhan dengan jenis "Perundungan" tidak akan ditampilkan secara publik.`}
                 </p>
               </div>
             )}

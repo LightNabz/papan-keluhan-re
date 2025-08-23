@@ -153,8 +153,7 @@ export default function KeluhanModal({
         <p className="text-sm mb-4 font-semibold">
           <strong>⚠️ </strong>{" "}
           <span className="text-yellow-600 dark:text-yellow-400">
-            Keluhan dengan jenis "Perundungan" tidak akan ditampilkan secara
-            publik.
+            {`Keluhan dengan jenis "Perundungan" tidak akan ditampilkan secara publik.`}
           </span>
         </p>
 
