@@ -216,7 +216,7 @@ export default function AdminDashboard() {
 
       {/* Mobile Drawer + Overlay */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-[60]" role="dialog" aria-modal="true">
+        <div className="md:hidden fixed inset-0 z-[1000]" role="dialog" aria-modal="true">
           {/* Overlay */}
           <div
             className="absolute inset-0 bg-black/50"
