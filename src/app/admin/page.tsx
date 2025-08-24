@@ -199,7 +199,7 @@ export default function AdminDashboard() {
       </aside>
 
       {/* Navbar Mobile */}
-      <div className="md:hidden fixed top-0 left-0 w-full bg-white dark:bg-gray-800 shadow z-50 flex items-center justify-between px-4 py-3">
+      <div className="md:hidden fixed top-0 left-0 w-full bg-white dark:bg-gray-800 shadow z-500 flex items-center justify-between px-4 py-3">
         <div className="font-bold text-blue-600 dark:text-blue-400">🛠 Admin Panel</div>
         {/* Tombol hamburger */}
         <button
