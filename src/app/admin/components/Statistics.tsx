@@ -19,14 +19,14 @@ interface StatisticsProps {
 
 export default function Statistics({ stats }: StatisticsProps) {
   // Data buat chart
-  const jenisData = stats
+  const jenisData = stats && stats.jenis_keluhan_counts
     ? Object.entries(stats.jenis_keluhan_counts).map(([jenis, count]) => ({
         name: jenis,
         value: count as number,
       }))
     : [];
 
-  const statusData = stats
+  const statusData = stats && stats.status_counts
     ? Object.entries(stats.status_counts).map(([status, count]) => ({
         name: status,
         value: count as number,

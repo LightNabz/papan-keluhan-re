@@ -31,6 +31,7 @@ interface ComplaintsListProps {
 export default function ComplaintsList({ notes, stats, onDelete, onStatusChange }: ComplaintsListProps) {
   const [filterJenisKeluhan, setFilterJenisKeluhan] = useState<string>("");
   const [filterStatus, setFilterStatus] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   return (
     <div>
@@ -39,12 +40,39 @@ export default function ComplaintsList({ notes, stats, onDelete, onStatusChange 
             Statistik
         </h1>
     <Statistics stats={stats} />
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 mt-20">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 mt-10">
         <h1 className="flex items-center gap-2 text-2xl md:text-3xl font-bold">
         <List className="w-8 h-8" />
             Keluhan-keluhan
         </h1>
-        
+      </div>
+
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+        {/* Search Input */}
+        <div>
+          <div className="relative max-w-md">
+            <input
+              type="text"
+              placeholder="Cari keluhan..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-3 py-2 pl-10 border rounded-md dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <svg
+              className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+        </div>
         {/* Filter Dropdowns */}
         <div className="mt-4 md:mt-0 flex flex-col sm:flex-row gap-4">
           {/* Jenis Keluhan Filter */}
@@ -58,7 +86,7 @@ export default function ComplaintsList({ notes, stats, onDelete, onStatusChange 
               <option value="">Semua Jenis</option>
               {Object.keys(stats?.jenis_keluhan_counts || {}).map((jenis) => (
                 <option key={jenis} value={jenis}>
-                  {jenis} ({stats?.jenis_keluhan_counts[jenis]})
+                  {jenis} ({stats?.jenis_keluhan_counts?.[jenis] || 0})
                 </option>
               ))}
             </select>
@@ -81,14 +109,25 @@ export default function ComplaintsList({ notes, stats, onDelete, onStatusChange 
             </select>
           </div>
         </div>
-      </div>
+        </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {notes
-          .filter(note => 
-            (filterJenisKeluhan === "" || note.jenis_keluhan === filterJenisKeluhan) &&
-            (filterStatus === "" || note.status === filterStatus)
-          )
+          .filter(note => {
+            // Search filter - search across multiple fields
+            const matchesSearch = searchQuery === "" || 
+              note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              note.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              note.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              note.jenis_keluhan.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              note.status.toLowerCase().includes(searchQuery.toLowerCase());
+            
+            // Existing filters
+            const matchesJenisKeluhan = filterJenisKeluhan === "" || note.jenis_keluhan === filterJenisKeluhan;
+            const matchesStatus = filterStatus === "" || note.status === filterStatus;
+            
+            return matchesSearch && matchesJenisKeluhan && matchesStatus;
+          })
           .map((note) => (
             <div
               key={note.id}

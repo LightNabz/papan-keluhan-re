@@ -29,7 +29,7 @@ export default function Navbar() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <nav className="mb-10 flex items-center justify-between px-6 py-4 shadow-md bg-white dark:bg-gray-900 sticky top-0 z-50">
+    <nav className="flex items-center justify-between px-6 py-4 shadow-md bg-white dark:bg-gray-900 sticky top-0 z-50">
       <div className="logo font-extrabold text-2xl text-blue-600 dark:text-blue-400 select-none">
         📋 Papan Keluhan
       </div>
@@ -39,39 +39,32 @@ export default function Navbar() {
         <li>
           <Link
             href="/"
-            className={`hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${
-              isActive("/") ? "text-blue-600 dark:text-blue-400 font-semibold" : ""
-            }`}
           >
-            Beranda
+            <button className={`px-1 py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-all transform hover:scale-105 ${
+                isActive("/") ? "text-blue-600 dark:text-blue-400 font-bold" : ""
+              }`}
+            >
+              Beranda
+            </button>
           </Link>
         </li>
         <li>
           <Link
             href="/keluhan"
-            className={`hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${
-              isActive("/keluhan") ? "text-blue-600 dark:text-blue-400 font-semibold" : ""
-            }`}
           >
-            Keluhan
+            <button className={`px-1 py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-all transform hover:scale-105 ${
+                isActive("/keluhan") ? "text-blue-600 dark:text-blue-400 font-bold" : ""
+              }`}
+            >
+              Keluhan
+            </button>
           </Link>
         </li>
         <li>
-          <Link
-            href="/keluhan/tambah"
-            className="px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors"
-          >
-            ➕ Tambah
-          </Link>
-        </li>
-        <li>
-          <Link
-            href="/admin/login"
-            className={`hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${
-              isActive("/admin/login") ? "text-blue-600 dark:text-blue-400 font-semibold" : ""
-            }`}
-          >
-            Admin
+          <Link href="/keluhan/tambah">
+              <button className="px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-all transform hover:scale-105">
+                ➕ Tambah
+              </button>
           </Link>
         </li>
       </ul>
@@ -133,7 +126,7 @@ export default function Navbar() {
                 href="/"
                 ref={firstLinkRef}
                 onClick={() => setOpen(false)}
-                className={`block rounded-xl px-4 py-3 font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                className={`block rounded-xl px-4 py-3 font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/5 ${
                   isActive("/") ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400" : ""
                 }`}
               >
@@ -144,7 +137,7 @@ export default function Navbar() {
               <Link
                 href="/keluhan"
                 onClick={() => setOpen(false)}
-                className={`block rounded-xl px-4 py-3 font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                className={`block rounded-xl px-4 py-3 font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/5 ${
                   isActive("/keluhan") ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400" : ""
                 }`}
               >
@@ -153,13 +146,10 @@ export default function Navbar() {
             </li>
             <li>
               <Link
-                href="/admin/login"
-                onClick={() => setOpen(false)}
-                className={`block rounded-xl px-4 py-3 font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  isActive("/admin/login") ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400" : ""
-                }`}
+                href="/keluhan/tambah"
+                className="block rounded-xl px-4 py-3 font-medium bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors"
               >
-                Admin
+                ➕ Tambah Keluhan
               </Link>
             </li>
           </ul>

@@ -2,9 +2,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Download, LogOut, BarChart3, List, X, Home } from "lucide-react";
-import LandingPage from "../../components/LandingPage";
-import ComplaintsList from "../../components/ComplaintsList";
-import ComplaintMatchingGame from "../../components/ComplaintMatchingGame";
+import GridBackground from "../components/GridBackground";
+import LandingPage from "./components/LandingPage";
+import ComplaintsList from "./components/ComplaintsList";
+import ComplaintMatchingGame from "./components/ComplaintMatchingGame";
 
 interface Note {
   id: string;
@@ -37,17 +38,23 @@ export default function AdminDashboard() {
       .then((res) => {
         if (res.status === 401) {
           router.push("/admin/login");
-          return [];
+          return null; // Prevent further processing
         }
         return res.json();
       })
       .then((data) => {
-        setNotes(data.notes || []);
-        setStats({
-          total_notes: data.total_notes,
-          jenis_keluhan_counts: data.jenis_keluhan_counts,
-          status_counts: data.status_counts,
-        });
+        if (data) {
+          setNotes(data.notes || []);
+          setStats({
+            total_notes: data.total_notes,
+            jenis_keluhan_counts: data.jenis_keluhan_counts,
+            status_counts: data.status_counts,
+          });
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching admin data:", error);
         setLoading(false);
       });
   }, [router]);
@@ -142,11 +149,12 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="font-sans min-h-screen flex bg-gray-100 dark:bg-gray-900 dark:text-gray-100">
-      {/* Sidebar Desktop */}
-      <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-white dark:bg-gray-800 shadow-lg flex-col">
-        <div className="p-6 font-extrabold text-xl text-blue-600 dark:text-blue-400">
-          🛠 Admin Panel
+      <div className="font-sans min-h-screen flex bg-gray-100 dark:bg-gray-900 dark:text-gray-100">
+        <GridBackground />
+        {/* Sidebar Desktop */}
+        <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-white dark:bg-gray-800 shadow-lg flex-col">
+          <div className="p-6 font-extrabold text-xl text-blue-600 dark:text-blue-400">
+            🛠 Admin Panel
         </div>
         <nav className="flex-1 px-4 space-y-2">
           <button
@@ -294,7 +302,7 @@ export default function AdminDashboard() {
       )}
 
       {/* Main Content */}
-      <main className="flex-1 p-4 md:p-8 overflow-y-auto md:ml-64 mt-20 md:mt-0">
+      <main className="flex-1 p-4 md:p-8 overflow-y-auto md:ml-64 mt-20 md:mt-0 relative z-100">
         {renderContent()}
       </main>
     </div>
