@@ -170,7 +170,7 @@ Proyek ini dilisensikan di bawah Lisensi MIT - lihat file LICENSE untuk detailny
 
 ## 📞 Dukungan
 
-Untuk dukungan atau pertanyaan, silakan hubungi tim pengembangan atau buat issue di repository.
+Untuk dukungan atau pertanyaan, silakan hubungi saya atau buat issue di repository.
 
 ---
 
